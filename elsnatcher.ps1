@@ -23,7 +23,7 @@ write-host "`n"
 Write-Host "Directory created at C:\$h" 
 
 #Moving event log files
-cd C:\Windows\System32\winevt\logs\
+Set-Location C:\Windows\System32\winevt\logs\
 Write-Host "Copying event logs ..."
 Copy-item Application.evtx -Destination $d
 Copy-item Security.evtx -Destination $d
@@ -60,14 +60,14 @@ do {
   write-host -nonewline "Enter a numeric value: "
   $inputString = read-host
   $ageoflogsinput = $inputString -as [Double]
-  $ok = $ageoflogsinput -ne $NULL
+  $ok = $NULL -ne $ageoflogsinput
   if ( -not $ok ) { write-host "You must enter a numeric value" }
 }
 until ( $ok )
 
 $ageoflogs = -$ageoflogsinput
 
-cd C:\inetpub\logs\LogFiles
+Set-Location C:\inetpub\logs\LogFiles
 
 New-Item C:\$h\iislogs -ItemType Directory | Out-Null
 
@@ -78,7 +78,7 @@ Write-Host "Open a Microsoft Exchange Management Console as Admin and paste in t
 
 
 #Copy over IIS logs based on age
-$iislogs = Get-ChildItem *.log -Path . -Recurse | ? {$_.LastWriteTime -gt (Get-Date).AddDays($ageoflogs)} |Copy-Item -Destination C:\$h\iislogs
+Get-ChildItem *.log -Path . -Recurse | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays($ageoflogs)} |Copy-Item -Destination C:\$h\iislogs
 write-host "`n"
 Write-Host "Exchange and IIS logs completed" -ForegroundColor Green
 Write-Host "`n"
@@ -90,6 +90,7 @@ Write-Host "The file size of the accumulated event/logs is $size, do you want to
 Write-Host "Zipping in powershell is only available in versions 5.0 and above, the current version is listed below." 
 $PSVersionTable
 
+Write-Host "`n"
 Write-Host "Enter 'n' if this machine is too old and dusty, you'll have to zip manually"
 do{
     $ans = Read-Host '(Y/N)'
@@ -113,6 +114,6 @@ until($ans -eq 'Y')
 
 #delete OG folder once compression is completed
 Remove-Item $d -Recurse -Force
-CD C:\
+Set-Location C:\
 Write-Host "`n"
 Write-Host "SUCCESS, Don't forget to remove all .ps1 files/evidence, set the remote execution policy back to remote-signed" -ForegroundColor Green
