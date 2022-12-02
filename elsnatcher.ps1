@@ -2,6 +2,14 @@
 # v2.0 
 #This script creates a directory as the machines hostname in the root of C:\ and pulls necessary event and IIS logs for typical engagements
 
+Write-Host "
+ _____ _                     _       _
+| ____| |    ___ _ __   __ _| |_ ___| |__   ___ _ __
+|  _| | |   / __| '_ \ / _` | __/ __| '_ \ / _ \ '__|  Event
+| |___| |___\__ \ | | | (_| | || (__| | | |  __/ |     Log
+|_____|_____|___/_| |_|\__,_|\__\___|_| |_|\___|_|      Snatcher
+"
+
 Write-Host "This script must be ran as admin" -Foregroundcolor Yellow
 Write-Host "it will start the extraction process with the most standard event logs, do you want to begin?" -ForegroundColor Yellow
 
@@ -84,7 +92,7 @@ Write-Host "Exchange and IIS logs completed" -ForegroundColor Green
 Write-Host "`n"
 
 #get and tell user accumulated log file size and ask if want to compress/zip 
-$size = “{0:N2}” -f ((Get-ChildItem -path $d -recurse | Measure-Object -property length -sum ).sum /1GB) + ” GB”
+$size = "{0:N2}" -f ((Get-ChildItem -path $d -recurse | Measure-Object -property length -sum ).sum /1GB) + " GB"
 
 Write-Host "The file size of the accumulated event/logs is $size, do you want to compress the log file?" -foregroundcolor yellow
 Write-Host "Zipping in powershell is only available in versions 5.0 and above, the current version is listed below." 
