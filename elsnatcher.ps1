@@ -1,13 +1,14 @@
 ﻿
-# v2.0 
+# v2.1 
 #This script creates a directory as the machines hostname in the root of C:\ and pulls necessary event and IIS logs for typical engagements
+#Run as admin, set-remoteexecutionpolicy unrestricted
 
 Write-Host "
  _____ _                     _       _
 | ____| |    ___ _ __   __ _| |_ ___| |__   ___ _ __
-|  _| | |   / __| '_ \ / _` | __/ __| '_ \ / _ \ '__|  Event
+|  _| | |   / __| '_ \ / _' | __/ __| '_ \ / _ \ '__|  Event
 | |___| |___\__ \ | | | (_| | || (__| | | |  __/ |     Log
-|_____|_____|___/_| |_|\__,_|\__\___|_| |_|\___|_|      Snatcher
+|_____|_____|___/_| |_|\__,_|\__\___|_| |_|\___|_|     Snatcher
 "
 
 Write-Host "This script must be ran as admin" -Foregroundcolor Yellow
@@ -28,7 +29,9 @@ New-Item C:\$h -itemType Directory | Out-Null
 
 $d = "C:\$h"
 write-host "`n"
-Write-Host "Directory created at C:\$h" 
+Write-Host "Directory created at C:\$h"
+#Get sysinfo and add to the new dir 
+systeminfo.exe > $d\$h"info.txt" 
 
 #Moving event log files
 Set-Location C:\Windows\System32\winevt\logs\
@@ -51,7 +54,7 @@ Write-Host "Enter 'N' to return and end the script" -foregroundcolor yellow
 do{
     $ans = Read-Host '(Y/N)'
     if($ans -eq 'N'){Write-Host "The copied logs are located in C:\$h" -ForegroundColor Green
-    Write-Host "Don't forget to remove all .ps1 files/evidence, set the remote execution policy back to remote-signed"
+    Write-Host "Don't forget to remove all .ps1 files/evidence, set the remote execution policy back to remote-signed" -ForegroundColor Green
      return }
 }
 until($ans -eq 'Y')
